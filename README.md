@@ -5,7 +5,7 @@ This is a Rust implementation of a raytracer based on the "Ray Tracing in One We
 ## Features
 
 - Basic raytracing algorithm with spheres and planes.
-- ~~Antialiasing using random sampling.~~ (not implemented yet)
+- Antialiasing using random sampling.
 - ~~Diffuse, metallic and dielectric materials.~~ (not implemented yet)
 - ~~Multi-threaded rendering using Rayon.~~ (not implemented yet)
 
