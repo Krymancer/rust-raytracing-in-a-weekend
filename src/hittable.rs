@@ -51,7 +51,7 @@ impl Hittable for HittableList {
         hit_anything = true;
         closest_so_far = temp_rec.t;
 
-        *hit_record = temp_rec.clone();
+        *hit_record = temp_rec;
       }
     }
 
