@@ -33,10 +33,9 @@ let width = 400;
 To modify the scene, edit the `world` variable:
 
 ```rust
-  // World 
-  let mut world = HittableList::new();
-  world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
-  world.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
+let mut world = HittableList::new();
+world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
+world.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
 ```
 
 The scene is defined as a list of `Hittable` objects. Currently, the scene contains spheres ~~and a plane~~. You can add, remove or modify these objects to create your own scene.
@@ -51,7 +50,7 @@ Each object is defined by its position and radius ~~(for spheres) or distance (f
 let samples_per_pixel = 100;
 ```
 
-Higher values of `samples_per_pixel´ will result in a smoother image but will also increase rendering time.
+Higher values of `samples_per_pixel` will result in a smoother image but will also increase rendering time.
 
 ## ~~Multi-threading~~
 
