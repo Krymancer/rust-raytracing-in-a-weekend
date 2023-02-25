@@ -22,10 +22,10 @@ The output image will be saved to the file output.ppm in the project directory.
 ## Configuration
 
 The raytracer can be configured by editing the variables in the `main` function in the `src/main.rs` file.
-Changing the width automatically changes the height of the image to keep the aspect ratio. (The base aspect ratio is 16/9)
+Changing the `WIDTH` automatically changes the height of the image to keep the aspect ratio. (The base aspect ratio is 16/9)
 
 ```rust
-let width = 400;
+pub const WIDTH : u64 = 400;
 ```
 
 ## Scene
@@ -42,12 +42,12 @@ The scene is defined as a list of `Hittable` objects. Currently, the scene conta
 
 Each object is defined by its position and radius ~~(for spheres) or distance (for planes), and material. The available materials are Lambertian (diffuse), Metal (reflective) and Dielectric (refractive).~~
 
-## ~~Anti-aliasing~~
+## Anti-aliasing
 
-~~To change the level of antialiasing, edit the `samples_per_pixel` variable:~~
+To change the level of antialiasing, edit the `SAMPLES_PER_PIXEL` variable:
 
 ```rust
-let samples_per_pixel = 100;
+pub const SAMPLES_PER_PIXEL : u64 = 100;
 ```
 
 Higher values of `samples_per_pixel` will result in a smoother image but will also increase rendering time.
