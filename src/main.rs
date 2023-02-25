@@ -5,6 +5,8 @@ mod point;
 mod hittable;
 mod util;
 mod sphere;
+mod camera;
+mod random;
 
 use crate::color::Color;
 use crate::hittable::HitRecord;
@@ -13,6 +15,11 @@ use crate::vec3::Vec3;
 use crate::hittable::Hittable;
 use crate::sphere::Sphere;
 use crate::hittable::HittableList;
+use crate::camera::Camera;
+use crate::random::random;
+
+pub const SAMPLES_PER_PIXEL : u64 = 100;
+pub const WIDTH : u64 = 400;
 
 fn ray_color(r: Ray, world: &HittableList) -> Vec3 {
     let mut hit_record : HitRecord = HitRecord::new();
@@ -29,7 +36,7 @@ fn ray_color(r: Ray, world: &HittableList) -> Vec3 {
 fn main() {
     // Image
     let aspect_ratio : f64 = 16.0 / 9.0;
-    let width: u64 = 400;
+    let width: u64 = WIDTH;
     let height: u64 = ((width as f64)/aspect_ratio) as u64;
 
     // World 
@@ -37,28 +44,22 @@ fn main() {
     world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
     world.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
     
-
     // Camera
-    let viewport_height: f64 = 2.0;
-    let viewport_width: f64= aspect_ratio * viewport_height;
-    let focal_length = 1.0;
-
-    let origin = Vec3::new(0.0, 0.0, 0.0);
-    let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
-    let vertical = Vec3::new(0.0, viewport_height, 0.0);
-    let lower_left_corner = origin - horizontal/2.0 - vertical/2.0 - Vec3::new(0.0, 0.0, focal_length);
+    let camera : Camera = Camera::new();
 
     // Render
     println!("P3\n{} {}\n255", width, height);
 
     for j in (0..height).rev() {
         for i in 0..width {
-            let u = i as f64 / (width - 1) as f64;
-            let v = j as f64 / (height - 1) as f64;
-
-            let r = Ray::new(origin, lower_left_corner + u*horizontal + v*vertical - origin);
-            let col = ray_color(r, &world);
-            color::write_color(col);
+            let mut pixel_color : Color = Color::new(0.0, 0.0, 0.0);
+            for _ in 0..SAMPLES_PER_PIXEL {
+                let u : f64 = ((i as f64) + random()) / ((width - 1) as f64);
+                let v : f64 = ((j as f64) + random()) / ((height - 1) as f64);
+                let r = camera.get_ray(u, v);
+                pixel_color += ray_color(r, &world);
+            }
+            color::write_color(pixel_color, SAMPLES_PER_PIXEL as f64);
         }
     }
 }
