@@ -24,7 +24,8 @@ Or you can use [this ppm viewer](https://www.cs.rhodes.edu/welshc/COMP141_F16/pp
 ## Output
 
 This is mimic the output of the original C++ implementation of the book.
-![output]([output.png](https://raw.githubusercontent.com/Krymancer/rust-raytracing-in-a-weekend/main/.github/image.png))
+
+![output](https://raw.githubusercontent.com/Krymancer/rust-raytracing-in-a-weekend/main/.github/image.png)
 
 ## Configuration
 
