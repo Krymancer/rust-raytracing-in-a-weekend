@@ -26,18 +26,21 @@ impl Ray {
     }
 }
 
-pub fn ray_color(r: Ray, world: &HittableList, depth: u32) -> Vector3<f32> {
+pub fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Vector3<f32> {
+    if let Some(hit) = world.hit(&ray, 0.001, f32::MAX) {
 
-    if depth <= 0 {
-        return Vector3::new(0.0,0.0,0.0);
-    }   
+        if depth <= 0 {
+            return Vector3::new(0.0,0.0,0.0);
+        }    
 
-    if let Some(hit) = world.hit(&r, 0.001, std::f32::INFINITY) {
-        let target  = hit.p + hit.normal + hit.normal.normalize();
-        return 0.5 * ray_color(Ray::new(hit.p, target - hit.p), world, depth-1);
+        if let Some((scattered, attenuation)) = hit.material.scatter(&ray, &hit) {
+            return attenuation.zip_map(&ray_color(&scattered, &world, depth-1), |l, r| l * r);
+        } else {
+            return Vector3::new(0.0,0.0,0.0);
+        }
+    } else {
+        let unit_direction = ray.direction().normalize();
+        let t = 0.5 * (unit_direction[1] + 1.0);
+        return (1.0-t) * Vector3::new(1.0, 1.0, 1.0) + t * Vector3::new(0.5, 0.7, 1.0);
     }
-
-    let unit_direction = r.direction().normalize();
-    let t = 0.5 * (unit_direction[1] + 1.0);
-    return (1.0-t) * Vector3::new(1.0, 1.0, 1.0) + t * Vector3::new(0.5, 0.7, 1.0);
 }

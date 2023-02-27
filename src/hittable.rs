@@ -1,5 +1,6 @@
 use crate::ray::Ray;
 use crate::hit_record::HitRecord;
+
 pub trait Hittable {
   fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;
 }
@@ -13,8 +14,8 @@ impl HittableList {
     Self{objects: Vec::new()}
   }
 
-  pub fn add(&mut self, object: Box<dyn Hittable>) {
-    self.objects.push(object);
+  pub fn add(&mut self, object: impl Hittable + 'static) {
+    self.objects.push(Box::new(object));
   }
 }
 
