@@ -16,32 +16,28 @@ use crate::material::{Lambertian, Metal, Dielectric};
 
 use rayon::prelude::*;
 
-pub const SAMPLES_PER_PIXEL : u32 = 100;
-pub const WIDTH : u32 = 800;
+pub const SAMPLES_PER_PIXEL : u32 = 500;
+pub const WIDTH : u32 = 1200;
 pub const MAX_DEPTH : u32 = 50;
 
 fn main() {
     // Image
-    let aspect_ratio : f64 = 16.0 / 9.0;
+    let aspect_ratio: f32 = 3.0 / 2.0;
     let width: u32 = WIDTH;
-    let height: u32 = ((width as f64)/aspect_ratio) as u32;
+    let height: u32 = ((width as f32)/aspect_ratio) as u32;
 
     // World 
-    let mut world = HittableList::new();
+    let world = random_scene();
 
-    let material_ground = Lambertian::new(Vector3::new(0.8, 0.8, 0.0));
-    let material_center = Lambertian::new(Vector3::new(0.1, 0.2, 0.5));
-    let material_left = Dielectric::new(1.5);
-    let material_right = Metal::new(Vector3::new(0.8, 0.6, 0.2), 0.0);
-
-    world.add(Sphere::new(Vector3::new(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(Sphere::new(Vector3::new(0.0, 0.0, -1.0), 0.5, material_center));
-    world.add(Sphere::new(Vector3::new(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(Sphere::new(Vector3::new(-1.0, 0.0, -1.0), -0.45, material_left));
-    world.add(Sphere::new(Vector3::new(1.0, 0.0, -1.0), 0.5, material_right));
-    
     // Camera
-    let camera : Camera = Camera::new(Vector3::new(-2.0, 2.0, 1.0), Vector3::new(0.0, 0.0, -1.0), Vector3::new(0.0, 1.0, 0.0), 90.0, 16.0/9.0);
+    let look_from = Vector3::new(13.0, 2.0, 3.0);
+    let look_at = Vector3::new(0.0, 0.0, 0.0);
+    let vup = Vector3::new(0.0, 1.0, 0.0);
+    let vertical_field_of_view = 20.0;
+    let dist_to_focus = 10.0;
+    let aperture = 0.1;
+
+    let camera : Camera = Camera::new(look_from, look_at, vup, vertical_field_of_view, aspect_ratio, aperture, dist_to_focus);
 
     // Render
     println!("P3\n{} {}\n255", width, height);
@@ -65,3 +61,32 @@ fn main() {
 }
 
 
+fn random_scene() -> HittableList {
+    let mut rng = rand::thread_rng();
+    let origin = Vector3::new(4.0, 0.2, 0.0);
+    let mut world = HittableList::new();
+    world.add(Sphere::new(Vector3::new(0.0, -1000.0, 0.0), 1000.0, Lambertian::new(Vector3::new(0.5, 0.5, 0.5))));
+    for a in -11..11 {
+        for b in -11..11 {
+            let choose_material = rng.gen::<f32>();
+            let center = Vector3::new(a as f32 + 0.9 * rng.gen::<f32>(), 0.2, b as f32 + 0.9 * rng.gen::<f32>());
+            if (center - origin).magnitude() > 0.9 {
+                if choose_material < 0.8 { // diffuse
+                    world.add(
+                        Sphere::new(center, 0.2,
+                                    Lambertian::new(Vector3::new(rng.gen::<f32>() * rng.gen::<f32>(), rng.gen::<f32>() * rng.gen::<f32>(), rng.gen::<f32>() * rng.gen::<f32>()))));
+                } else if choose_material < 0.95 { // metal
+                    world.add(
+                        Sphere::new(center, 0.2,
+                                    Metal::new(Vector3::new(0.5 * (1.0 + rng.gen::<f32>()), 0.5 * (1.0 + rng.gen::<f32>()), 0.5 * (1.0 + rng.gen::<f32>())), 0.5 * rng.gen::<f32>())));
+                } else { // glass
+                    world.add( Sphere::new(center, 0.2, Dielectric::new(1.5)));
+                }
+            }
+        }
+    }
+    world.add(Sphere::new(Vector3::new(0.0, 1.0, 0.0), 1.0, Dielectric::new(1.5)));
+    world.add(Sphere::new(Vector3::new(-4.0, 1.0, 0.0), 1.0, Lambertian::new(Vector3::new(0.4, 0.2, 0.1))));
+    world.add(Sphere::new(Vector3::new(4.0, 1.0, 0.0), 1.0, Metal::new(Vector3::new(0.7, 0.6, 0.5), 0.0)));
+    return world
+}

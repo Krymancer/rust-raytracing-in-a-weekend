@@ -9,6 +9,10 @@ This is a Rust implementation of a raytracer based on the "Ray Tracing in One We
 - Diffuse, metallic and dielectric materials
 - Multi-threaded rendering using Rayon.
 
+The output is a [PPM](https://netpbm.sourceforge.net/doc/ppm.html) image. you can save the output of the program to a file and open it with any image viewer that supports ppm.
+I recommend [GIMP](https://www.gimp.org/).
+Or you can use [this ppm viewer](https://www.cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html) to view the image in your browser.
+
 ## Usage
 
 To run the raytracer, execute the following command
@@ -25,7 +29,7 @@ The raytracer can be configured by editing the variables in the `main` function 
 Changing the `WIDTH` automatically changes the height of the image to keep the aspect ratio. (The base aspect ratio is 16/9)
 
 ```rust
-pub const WIDTH : u64 = 400;
+pub const WIDTH : u32 = 400;
 ```
 
 ## Scene
@@ -49,7 +53,7 @@ Each object is defined by its position, radius, and material. The available mate
 To change the level of antialiasing, edit the `SAMPLES_PER_PIXEL` variable:
 
 ```rust
-pub const SAMPLES_PER_PIXEL : u64 = 100;
+pub const SAMPLES_PER_PIXEL : u32 = 100;
 ```
 
 Higher values of `samples_per_pixel` will result in a smoother image but will also increase rendering time.
