@@ -7,6 +7,8 @@ use crate::ray::Ray;
 pub trait Material: Sync {
   fn scatter(&self, ray : &Ray, record: &HitRecord) -> Option<(Ray, Vector3<f32>)>;
 }
+
+#[derive(Clone, Copy)]
 pub struct Lambertian {
   albedo: Vector3<f32>,
 }
@@ -25,6 +27,7 @@ impl Material for Lambertian {
   }
 }
 
+#[derive(Clone, Copy)]
 pub struct Metal {
   albedo: Vector3<f32>,
   fuzz: f32,
@@ -51,6 +54,7 @@ impl Material for Metal {
   }
 }
 
+#[derive(Clone, Copy)]
 pub struct Dielectric {
   ir: f32,
 }

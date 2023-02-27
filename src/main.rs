@@ -29,20 +29,19 @@ fn main() {
     // World 
     let mut world = HittableList::new();
 
-    let ground_material = Lambertian::new(Vector3::new(0.8, 0.8, 0.0));
-    let center_material = Lambertian::new(Vector3::new(0.1, 0.2, 0.5));
-    let left_material = Dielectric::new(1.5);
-    let left_material2 = Dielectric::new(1.5);
-    let right_material = Metal::new(Vector3::new(0.8, 0.6, 0.2), 0.0);
+    let material_ground = Lambertian::new(Vector3::new(0.8, 0.8, 0.0));
+    let material_center = Lambertian::new(Vector3::new(0.1, 0.2, 0.5));
+    let material_left = Dielectric::new(1.5);
+    let material_right = Metal::new(Vector3::new(0.8, 0.6, 0.2), 0.0);
 
-    world.add(Sphere::new(Vector3::new( 0.0, -100.5, -1.0), 100.0, ground_material));
-    world.add(Sphere::new(Vector3::new( 0.0,    0.0, -1.0),   0.5, center_material));
-    world.add(Sphere::new(Vector3::new(-1.0,    0.0, -1.0),   0.5, left_material));
-    world.add(Sphere::new(Vector3::new(-1.0,    0.0, -1.0),   -0.4, left_material2));
-    world.add(Sphere::new(Vector3::new( 1.0,    0.0, -1.0),   0.5, right_material));
+    world.add(Sphere::new(Vector3::new(0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(Sphere::new(Vector3::new(0.0, 0.0, -1.0), 0.5, material_center));
+    world.add(Sphere::new(Vector3::new(-1.0, 0.0, -1.0), 0.5, material_left));
+    world.add(Sphere::new(Vector3::new(-1.0, 0.0, -1.0), -0.45, material_left));
+    world.add(Sphere::new(Vector3::new(1.0, 0.0, -1.0), 0.5, material_right));
     
     // Camera
-    let camera : Camera = Camera::new();
+    let camera : Camera = Camera::new(Vector3::new(-2.0, 2.0, 1.0), Vector3::new(0.0, 0.0, -1.0), Vector3::new(0.0, 1.0, 0.0), 90.0, 16.0/9.0);
 
     // Render
     println!("P3\n{} {}\n255", width, height);
