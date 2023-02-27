@@ -9,29 +9,16 @@ mod camera;
 mod random;
 
 use crate::color::Color;
-use crate::hittable::HitRecord;
-use crate::ray::Ray;
 use crate::vec3::Vec3;
-use crate::hittable::Hittable;
 use crate::sphere::Sphere;
 use crate::hittable::HittableList;
 use crate::camera::Camera;
+use crate::ray::ray_color;
 use crate::random::random;
 
 pub const SAMPLES_PER_PIXEL : u64 = 100;
-pub const WIDTH : u64 = 400;
-
-fn ray_color(r: Ray, world: &HittableList) -> Vec3 {
-    let mut hit_record : HitRecord = HitRecord::new();
-    if world.hit(&r, 0.0, util::INFINITY, &mut hit_record) {
-        let color = 0.5 * (hit_record.normal + Vec3::new(1.0, 1.0, 1.0));
-        return color;
-    }
-
-    let unit_direction = r.direction().make_unit_vector();
-    let t = 0.5 * (unit_direction.y() + 1.0);
-    return (1.0-t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0);
-}
+pub const WIDTH : u64 = 200;
+pub const MAX_DEPTH : u64 = 50;
 
 fn main() {
     // Image
@@ -57,7 +44,7 @@ fn main() {
                 let u : f64 = ((i as f64) + random()) / ((width - 1) as f64);
                 let v : f64 = ((j as f64) + random()) / ((height - 1) as f64);
                 let r = camera.get_ray(u, v);
-                pixel_color += ray_color(r, &world);
+                pixel_color += ray_color(r, &world, MAX_DEPTH);
             }
             color::write_color(pixel_color, SAMPLES_PER_PIXEL as f64);
         }
