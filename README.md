@@ -9,10 +9,6 @@ This is a Rust implementation of a raytracer based on the "Ray Tracing in One We
 - Diffuse, metallic and dielectric materials
 - Multi-threaded rendering using Rayon.
 
-The output is a [PPM](https://netpbm.sourceforge.net/doc/ppm.html) image. you can save the output of the program to a file and open it with any image viewer that supports ppm.
-I recommend [GIMP](https://www.gimp.org/).
-Or you can use [this ppm viewer](https://www.cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html) to view the image in your browser.
-
 ## Usage
 
 To run the raytracer, execute the following command
@@ -21,7 +17,14 @@ To run the raytracer, execute the following command
 cargo run --release
 ```
 
-The output image will be saved to the file output.ppm in the project directory.
+The output is a [PPM](https://netpbm.sourceforge.net/doc/ppm.html) image. you can save the output of the program to a file and open it with any image viewer that supports ppm.
+I recommend [GIMP](https://www.gimp.org/).
+Or you can use [this ppm viewer](https://www.cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html) to view the image in your browser.
+
+## Output
+
+This is mimic the output of the original C++ implementation of the book.
+![output]([output.png](https://raw.githubusercontent.com/Krymancer/rust-raytracing-in-a-weekend/main/.github/image.png))
 
 ## Configuration
 
