@@ -6,8 +6,8 @@ This is a Rust implementation of a raytracer based on the "Ray Tracing in One We
 
 - Basic raytracing algorithm with spheres and planes.
 - Antialiasing using random sampling.
-- ~~Diffuse, metallic and dielectric materials.~~ (not implemented yet)
-- ~~Multi-threaded rendering using Rayon.~~ (not implemented yet)
+- Diffuse, metallic and dielectric materials
+- Multi-threaded rendering using Rayon.
 
 ## Usage
 
@@ -34,13 +34,15 @@ To modify the scene, edit the `world` variable:
 
 ```rust
 let mut world = HittableList::new();
-world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
-world.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
+world.add(Sphere::new(Vector3::new( 0.0, -100.5, -1.0), 100.0, Lambertian::new(Vector3::new(0.8, 0.8, 0.0))));
+world.add(Sphere::new(Vector3::new( 0.0,    0.0, -1.0),   0.5, Lambertian::new(Vector3::new(0.1, 0.2, 0.5)));
+world.add(Sphere::new(Vector3::new(-1.0,    0.0, -1.0),   0.5, Dielectric::new(1.5)));
+world.add(Sphere::new(Vector3::new( 1.0,    0.0, -1.0),   0.5, Metal::new(Vector3::new(0.8, 0.6, 0.2), 0.0)));
 ```
 
 The scene is defined as a list of `Hittable` objects. Currently, the scene contains spheres ~~and a plane~~. You can add, remove or modify these objects to create your own scene.
 
-Each object is defined by its position and radius ~~(for spheres) or distance (for planes), and material. The available materials are Lambertian (diffuse), Metal (reflective) and Dielectric (refractive).~~
+Each object is defined by its position, radius, and material. The available materials are Lambertian (diffuse), Metal (reflective) and Dielectric (refractive).
 
 ## Anti-aliasing
 
@@ -52,10 +54,6 @@ pub const SAMPLES_PER_PIXEL : u64 = 100;
 
 Higher values of `samples_per_pixel` will result in a smoother image but will also increase rendering time.
 
-## ~~Multi-threading~~
+## Multi-threading
 
-~~To change the number of threads used for rendering, edit the `num_threads` variable:~~
-
-```rust
-let num_threads = 8;
-```
+I used [rayon](https://github.com/rayon-rs/rayon) to active multi-threading.
